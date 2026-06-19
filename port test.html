@@ -66,18 +66,18 @@ nav{
 .gallery-controls{
   display:flex;align-items:center;gap:8px;flex-wrap:wrap;
 }
-.gallery-select,.gallery-input{
-  background:var(--surface);border:1px solid var(--border);color:var(--text);
-  border-radius:10px;padding:8px 12px;font-family:'DM Mono',monospace;font-size:11px;
+.gallery-toggle-group{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
 }
-.gallery-input{min-width:240px;}
-.gallery-select{min-width:180px;}
 .filter-btn{
-  padding:6px 14px;border-radius:20px;border:1px solid var(--border);
+  padding:8px 16px;border-radius:999px;border:1px solid var(--border);
   background:var(--surface);color:var(--muted);font-family:'DM Mono',monospace;
   font-size:11px;cursor:pointer;transition:all .15s;white-space:nowrap;
 }
-.filter-btn.active{background:var(--accent);color:#000;border-color:var(--accent);}
+.filter-btn.active{
+  background:var(--accent);color:#000;border-color:var(--accent);
+  box-shadow:0 0 0 1px rgba(0,229,160,.18);
+}
 .gallery-status{
   margin-left:auto;font-size:11px;color:var(--muted);
   background:var(--surface);border:1px solid var(--border);
@@ -85,29 +85,6 @@ nav{
 }
 .gallery-status.ok{color:var(--accent);border-color:rgba(0,229,160,.3);}
 .gallery-status.err{color:#ff5f6d;}
-.gallery-preview{
-  margin-bottom:16px;
-}
-.gallery-preview-card{
-  position:relative;
-  width:100%;
-  aspect-ratio:16/9;
-  overflow:hidden;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:var(--surface2);
-}
-.gallery-preview-card img{
-  width:100%;height:100%;object-fit:cover;display:block;
-}
-.gallery-preview-overlay{
-  position:absolute;left:0;right:0;bottom:0;
-  padding:14px 16px;
-  background:linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,.18));
-  color:#fff;
-  font-size:12px;
-  letter-spacing:.5px;
-}
 .gallery-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
@@ -132,6 +109,12 @@ nav{
 .photo-card .ph-label{
   position:absolute;top:8px;left:8px;font-size:9px;letter-spacing:.5px;
   padding:3px 8px;border-radius:10px;background:rgba(0,0,0,.65);color:#fff;
+}
+.photo-card .ph-placeholder{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:10px 10px 12px;
+  background:linear-gradient(to top, rgba(0,0,0,.78), rgba(0,0,0,.18));
+  color:#fff;font-size:10px;letter-spacing:.6px;text-transform:uppercase;
 }
 
 /* RESUME */
@@ -354,29 +337,46 @@ nav{
 <section class="section" id="gallery">
   <div class="section-label">Food Work</div>
 
-  <!--
-  ══════════════════════════════════════════════════
-  SETUP
-  1. Paste your image URLs below
-  2. Use direct links that end in .jpg, .png, or .webp
-  3. The gallery will show them automatically
-  ══════════════════════════════════════════════════
-  -->
   <script>
-  const PHOTO_URLS = [
-    "https://example.com/photo-1.jpg",
-    "https://example.com/photo-2.jpg",
-    "https://example.com/photo-3.jpg"
+  const PHOTO_ITEMS = [
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/FB_IMG_1781133208534.jpg", placeholder: "Desserts" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/FB_IMG_1781133217471.jpg", placeholder: "Desserts" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/FB_IMG_1781133237950.jpg", placeholder: "Desserts" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/FB_IMG_1781133265382.jpg", placeholder: "Desserts" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/FB_IMG_1781133301607.jpg", placeholder: "Fresh Baked" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/FB_IMG_1781133338521.jpg", placeholder: "Fresh Baked" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/FB_IMG_1781133360489.jpg", placeholder: "Fresh Baked" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/FB_IMG_1781133401891.jpg", placeholder: "Fresh Baked" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/FB_IMG_1781133426159.jpg", placeholder: "Dinner Specials" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/FB_IMG_1781133674952.jpg", placeholder: "Dinner Specials" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/FB_IMG_1781133751161.jpg", placeholder: "Dinner Specials" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/FB_IMG_1781133836928.jpg", placeholder: "Dinner Specials" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/FB_IMG_1781133847662.jpg", placeholder: "Desserts" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/IMG_20260610_182155.jpg", placeholder: "Fresh Baked" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/IMG_20260610_185704.jpg", placeholder: "Fresh Baked" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/IMG_20260610_185808.jpg", placeholder: "Dinner Specials" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/IMG_20260610_190212.jpg", placeholder: "Dinner Specials" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/IMG_20260610_190302.jpg", placeholder: "Desserts" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/IMG_20260610_190339.jpg", placeholder: "Dinner Specials" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/IMG_20260610_190341.jpg", placeholder: "Fresh Baked" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/IMG_20260610_190403.jpg", placeholder: "Desserts" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/received_676585687663276.jpeg", placeholder: "Dinner Specials" },
+    { url: "https://raw.githubusercontent.com/JozNski/Resume/main/Pictures-20260618T223033Z-3-001/Pictures/received_971636300609863.jpeg", placeholder: "Fresh Baked" }
   ];
   </script>
 
   <div class="gallery-toolbar">
     <div class="gallery-controls">
-      <button class="filter-btn" id="galleryToggleBtn">Toggle Photos</button>
+      <div class="gallery-toggle-group">
+        <button class="filter-btn active" id="galleryToggleBtn">Hide Photos</button>
+        <button class="filter-btn active" data-category-toggle="Desserts">Desserts</button>
+        <button class="filter-btn active" data-category-toggle="Fresh Baked">Fresh Baked</button>
+        <button class="filter-btn active" data-category-toggle="Dinner Specials">Dinner Specials</button>
+      </div>
     </div>
     <div class="gallery-status" id="galleryStatus">⟳ Loading...</div>
   </div>
-  <div class="gallery-grid" id="galleryGrid" style="display:none;">
+  <div class="gallery-grid" id="galleryGrid">
     <div class="gallery-spinner"><div class="spinner"></div>Loading...</div>
   </div>
 </section>
@@ -393,19 +393,63 @@ nav{
 
 <script>
 // ── GALLERY ──
-function toggleGalleryGrid(){
+const categoryState = {
+  all: true,
+  "Desserts": true,
+  "Fresh Baked": true,
+  "Dinner Specials": true
+};
+
+function updateGalleryButton(){
+  const btn = document.getElementById("galleryToggleBtn");
   const grid = document.getElementById("galleryGrid");
-  const isHidden = grid.style.display === "none";
-  grid.style.display = isHidden ? "grid" : "none";
+  if (!btn) return;
+  btn.classList.toggle("active", categoryState.all && grid.style.display !== "none");
+  btn.textContent = categoryState.all ? "Hide Photos" : "Show Photos";
+
+  document.querySelectorAll('[data-category-toggle]').forEach(button => {
+    const category = button.dataset.categoryToggle;
+    button.classList.toggle("active", categoryState[category]);
+    button.textContent = categoryState[category] ? category : `${category} (Hidden)`;
+  });
+}
+
+function toggleGalleryGrid(){
+  categoryState.all = !categoryState.all;
+  if (!categoryState.all) {
+    categoryState["Desserts"] = false;
+    categoryState["Fresh Baked"] = false;
+    categoryState["Dinner Specials"] = false;
+  } else {
+    categoryState["Desserts"] = true;
+    categoryState["Fresh Baked"] = true;
+    categoryState["Dinner Specials"] = true;
+  }
+  updateGalleryButton();
+  loadGallery();
+}
+
+function toggleCategory(category){
+  categoryState[category] = !categoryState[category];
+  categoryState.all = ["Desserts", "Fresh Baked", "Dinner Specials"].every(c => categoryState[c]);
+  updateGalleryButton();
+  loadGallery();
 }
 
 function loadGallery(){
   const grid = document.getElementById("galleryGrid");
   const status = document.getElementById("galleryStatus");
 
-  if(!PHOTO_URLS || !PHOTO_URLS.length){
-    grid.innerHTML = `<div class="gallery-placeholder">No photo URLs yet.<br>Add image links in the PHOTO_URLS array.</div>`;
+  if(!PHOTO_ITEMS || !PHOTO_ITEMS.length){
+    grid.innerHTML = `<div class="gallery-placeholder">No photos yet.<br>Add items to the PHOTO_ITEMS array.</div>`;
     status.textContent = "No photos";
+    status.className = "gallery-status err";
+    return;
+  }
+
+  if (!categoryState.all && !["Desserts", "Fresh Baked", "Dinner Specials"].some(c => categoryState[c])) {
+    grid.innerHTML = "";
+    status.textContent = "All photos hidden";
     status.className = "gallery-status err";
     return;
   }
@@ -413,27 +457,40 @@ function loadGallery(){
   status.textContent = "⟳ Loading...";
   status.className = "gallery-status";
   grid.innerHTML = `<div class="gallery-spinner"><div class="spinner"></div>Loading photos...</div>`;
-  grid.style.display = "grid";
 
   setTimeout(() => {
+    const visiblePhotos = PHOTO_ITEMS.filter(photo => categoryState.all || categoryState[photo.placeholder]);
     grid.innerHTML = "";
-    PHOTO_URLS.forEach((url, index) => {
+
+    if (!visiblePhotos.length) {
+      grid.innerHTML = `<div class="gallery-placeholder">No photos selected.<br>Use the toggles above.</div>`;
+      status.textContent = "No visible photos";
+      status.className = "gallery-status err";
+      return;
+    }
+
+    visiblePhotos.forEach((photo, index) => {
       const card = document.createElement("div");
       card.className = "photo-card";
       card.innerHTML = `
-        <img src="${url}" alt="Photo ${index + 1}" loading="lazy">
+        <img src="${photo.url}" alt="Photo ${index + 1}" loading="lazy">
         <div class="ph-label">Photo ${index + 1}</div>
+        <div class="ph-placeholder">${photo.placeholder || "Gallery"}</div>
       `;
       grid.appendChild(card);
     });
 
-    status.textContent = `${PHOTO_URLS.length} photo${PHOTO_URLS.length === 1 ? "" : "s"}`;
+    status.textContent = `${visiblePhotos.length} photo${visiblePhotos.length === 1 ? "" : "s"}`;
     status.className = "gallery-status ok";
+    updateGalleryButton();
   }, 200);
 }
 
 document.getElementById("galleryToggleBtn").addEventListener("click", toggleGalleryGrid);
-
+document.querySelectorAll('[data-category-toggle]').forEach(button => {
+  button.addEventListener('click', () => toggleCategory(button.dataset.categoryToggle));
+});
+updateGalleryButton();
 loadGallery();
 </script>
 </body>
